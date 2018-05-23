@@ -1,0 +1,117 @@
+Hallo zusammen,
+
+hier die Infos zu Einteilung, Aufgaben und Entwicklungsprozess.
+
+Einteilung:
+
+- Frontend: Darius, Jan, Leon
+- Transformation: Dennis, Kristina
+- Backend: Nijat
+
+Aufgaben bis 1.12. (falls es dazu Fragen gibt, schreibt per Slack! :))
+
+- Alle: Ihr findet zum Einstieg im Repository (siehe unten) kleine Demos
+zu Frontend, Pass und Backend nach unserer Vorstellung. Beachtet bitte
+ggf. bei der Suche nach online Resourcen, dass wir keine normalen llvm
+Frontends/Backends verwenden, sondern unsere eigene Struktur + die llvm
+IR / Zwischensprache (*.bc und *.ll). Als Test ladet bitte eure
+erstellten Testdateien (.asm bzw. .bc) zusammen mit den erwarteten
+Ergebnisdateien (.asm bzw. .bc) hoch. Dokumentiert bitte sowohl wichtige
+Designentscheidungen als auch wie man eure jeweiligen Programme verwendet.
+
+- Frontend: Generiert euch mithilfe der IAR Workbench eine
+selbstgeschriebene ASM Datei mit 5 unterschiedlichen, selbst gewählten
+Instruktionen und prüft, ob die Datei erfolgereich kompiliert. Schreibt
+ein Frontend, das die Datei einliest, parst, in LLVM IR übersetzt, und
+als .bc Datei abspeichert. Zusätzlich sollen sowohl der ASM Befehl als
+auch die Anzahl an Bytes in Maschinencode an die LLVM IR als Metadaten
+angefügt werden. Für das Ermitteln der Länge jeder Instruktion könnt ihr
+entweder einen Assembler verwenden oder ihr hardcoded die Länge jeder
+Instruktion, wenn ihr diese für das Lifting implementiert.
+
+- Transformation: Legt euch zum Test ein Beispielprojekt mit 2 .c
+Dateien und etwas Code (je 2 Funktionen, mindestens eine Schleife, ein
+paar IF Anweisungen) an und verwendet clang um diese in 2 .bc Dateien
+umzuwandeln. Diese 2 .bc Dateien sind Ausgangspunkt der Aufgabe:
+Schreibt einen Analysis Pass, der den Mittelwert der Bytegrößen aller
+Basic Blocks aus allen Dateien ermittelt (tauscht euch mit Team Frontend
+aus, wie die Metadaten abgespeichert werden, sodass ihr darauf zugreifen
+könnt). Speichert den Mittelwert in eine json Datei. Implementiert einen
+Transformation Pass, der alle Basic Blocks, deren Bytegröße größer als
+der Mittelwert ist, per direct jumps aufteilt. Dabei müssen die
+Metadaten an jeder Instruktion erhalten bleiben, neue Instruktionen (die
+direct jumps) sollen nicht mit Metadaten versehen werden, ihre Bytelänge
+und ASM Repräsentation bleibt leer.
+
+- Backend: Schreib einen Lowerer um LLVM modules zu .asm Dateien zurück
+zu transformieren (sprich dich mit Team Transformation ab und verwende
+auch dasselbe Beispielprojekt in C). Greif dafür auf Metadaten zurück
+(ASM Repräsentation - Absprache mit Team Frontend) und generiere für
+neue Instruktionen entsprechenden ASM Code (Absprache mit Team
+Transformation - nur dort eingefügte Instruktionen (direct Jumps) müssen
+supportet werden). Für die Labels der Basicblöcke verwende eindeutige
+Namen, z. B. generiert aus Modulename + Basicblocknummer.
+
+Git Setup:
+
+git clone --recursive
+"[gitlab@git.emproof.de:8922]:ai-project/shark.git" (ihr solltet Emails
+mit einem Invitelink zu Gitlab bekommen haben, wenn nicht bitte im Slack
+melden *)
+mkdir build
+cd build
+cmake .. -GNinja
+ninja (der Befehl dauert beim ersten eingeben länger, da LLVM mitgebaut
+wird - danach geht's schneller :) **)
+
+Entwicklungsprozess:
+
+Legt im Ordner src jeweils einen Ordner names "Frontend",
+"Transformation" bzw. "Backend" an.
+Fügt in der CMakeLists.txt in src per add_subdirectory("Frontend"),
+add_subdirectory("Transformation") bzw. add_subdirectory("Backend")
+euren Ordner zum Buildsystem hinzu
+Legt in eurem Ordner eine neue CMakeLists.txt an, die Vorlagen dafür
+findet ihr in den entsprechenden Demo-Ordnern
+Wechselt dann wieder auf der Konsole in den build ordner und führt
+wieder ninja aus. Diesmal sollte das Bauen schneller gehen, da LLVM
+schon gebaut ist und nur eure Änderungen gebaut werden.
+Eure Programme liegen dann in build/bin/
+Commitet und pusht euren Stand am besten regelmäßig, dann gibt es keine
+Probleme mit Datenverlust. Wichtig ist nur, dass ihr keinen Stand
+commited, der nicht kompilerbar ist. Vor dem commiten bitte den
+akutellen Stand pullen. Eine kurze Einführung in Git findet ihr hier
+http://product.hubspot.com/blog/git-and-github-tutorial-for-beginners
+Bei Fragen einfach in Slack melden.
+
+*
+Ihr solltet zwei Emails von Gitlab bekommen haben, nur die mit dem
+Betreff "Account was created for you" ist dabei relevant. (Sorry für den
+Spam)
+Legt euch einen Account in unserem Gitlab per Link aus der Email an.
+Dann generiert euch bitte ein ssh keypair (
+https://help.github.com/articles/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent/
+) oder nutzt ein bestehendes Pair und fügt das zu eurem Account hinzu (
+https://git.emproof.de/profile/keys )
+Dann clont euch das repo ( https://git.emproof.de/ai-project/shark ),
+wichtig ist dabei der Parameter --recursive damit ihr das Submodule mit
+clont, also gebt folgendes in die Konsole ein:
+    git clone --recursive
+"[gitlab@git.emproof.de:8922]:ai-project/shark.git"
+Die Anführungszeichen sind wichtig, da es sonst zu Problemen beim clonen
+kommt.
+
+**
+Insgesamt braucht das Bauen von LLVM 12GB RAM+Swap. Je mehr davon RAM
+ist, desto schneller geht das Bauen.
+Das Bauen wird sehr wahrscheinlich gegen Ende crashen, dann macht mit
+ninja -j1 weiter.
+Sollte das Bauen trotzdem noch crashen meldet euch in Slack, wir
+versuchen das dann zu debuggen.
+Wenn ihr ccache ( https://ccache.samba.org/ ) installiert habt, dann
+wird es automatisch verwendet, aber es ist nicht notwendig. Wenn ihr es
+installieren wollt, dann geht das normal über die Repositories.
+
+Freundliche Grüße,
+Philipp, Benjamin, Marc
+

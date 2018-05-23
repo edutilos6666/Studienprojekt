@@ -1,0 +1,177 @@
+\documentclass[a4paper, 10pt]{scrartcl}
+
+% geometry packages
+\usepackage{geometry}
+\geometry{left=2.0cm,textwidth=17cm,top=2.5cm,textheight=23cm}
+
+% language packages
+\usepackage[english]{babel}
+\usepackage[T1]{fontenc}
+\usepackage[utf8x]{inputenc}
+
+% math packages
+\usepackage{amsmath,amssymb,wasysym}
+\newtheorem{definition}{Definition}
+
+% graphic packages
+\usepackage{graphicx,color,xcolor}
+
+\usepackage{tikz}
+\usetikzlibrary{automata,arrows,calc,shadows.blur,shapes.symbols}
+\usepackage{circuitikz}
+\usepackage{pgf}
+\usepackage{pgfplots}
+\usepackage[most]{tcolorbox}
+\usepackage{subcaption}
+
+% table packages
+\usepackage{tabularx}
+\usepackage{makecell}
+\usepackage{multirow}
+\usepackage{colortbl}
+\usepackage{booktabs}
+
+% links
+\usepackage{url}
+\usepackage{hyperref}
+
+% listing
+\usepackage{listings}
+\lstdefinestyle{command_line}
+{
+    language=bash,
+    basicstyle=\ttfamily,
+    identifierstyle=\color{black},
+    keywordstyle=\color{magenta},
+    stringstyle=\color{green!30},
+    commentstyle=\color{white},
+    backgroundcolor=\color{white},
+    columns=flexible,
+    frame=single,
+    frameround=tttt,
+    showspaces=false,
+    showstringspaces=false,
+    numberstyle=\small,
+    stepnumber=1,
+    numbers=left,
+    tabsize=4,
+    breaklines=true,
+    breakautoindent=true,
+    xrightmargin=-\fboxsep,
+    captionpos=t,
+}
+
+% watermarking
+\usepackage{draftwatermark}
+\SetWatermarkText{Confidential}
+\SetWatermarkScale{0.95}
+\SetWatermarkLightness{0.8}
+
+\usepackage{eso-pic}
+\AddToShipoutPictureBG{
+\begin{tikzpicture}[overlay,remember picture]
+	\draw[line width=3pt,red] ($ (current page.north west) + (1cm,-1cm) $) rectangle ($ (current page.south east) + (-1cm,1cm) $);
+\end{tikzpicture}
+}
+
+
+% auxiliary packages for formatting
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage{xspace}
+\usepackage{csquotes}
+\usepackage{pifont}
+\usepackage{comment}
+
+\usepackage{subcaption}
+\usepackage{float}
+\captionsetup[subfigure]{labelformat = parens, labelsep = space, font = small}
+\usepackage{enumitem}
+
+\pdfmapfile{+zi4.map}
+\usepackage{zi4}
+
+\makeatletter
+\AtBeginDocument{
+	\hypersetup{
+		pdftitle = {\@title},
+		pdfauthor = {\@author},
+		pdfsubject={\@title},
+		pdfkeywords={}
+	}
+}
+
+\makeatother
+
+\newcommand{\CC}[1][]{$\text{C\hspace{-.25ex}}^{_{_{_{++}}}}\ifthenelse{\equal{#1}{}}{}{\text{\hspace{-.625ex}#1}}$}
+
+\newcommand{\circled}[2][]{
+  \tikz[baseline=(char.base)]{
+    \node[shape=circle,draw,inner sep=1pt,fill=black]
+    (char) {\phantom{\ifblank{#1}{#2}{#1}}};
+    \node[text=white] at (char.center) {\makebox[0pt][c]{\bf #2}};}}
+\robustify{\circled}
+
+\newcommand{\todo}[1]{\textcolor{red}{todo: #1}\xspace}
+
+\addto\extrasenglish{
+  \renewcommand{\appendixautorefname}{Appendix}
+  \renewcommand{\figureautorefname}{Figure}
+  \renewcommand{\sectionautorefname}{Section}
+  \renewcommand{\subsectionautorefname}{Section}
+  \renewcommand{\subsubsectionautorefname}{Section}
+  \renewcommand{\tableautorefname}{Table}
+}
+
+\newcommand{\Appendix}[1]{\textcolor{blue}{\autoref{#1}}}
+\newcommand{\Figure}[1]{\textcolor{blue}{\autoref{#1}}}
+\newcommand{\Section}[1]{\textcolor{blue}{\autoref{#1}}}
+\newcommand{\Table}[1]{\textcolor{blue}{\autoref{#1}}}
+
+% prevent clubs and widows
+\clubpenalty10000
+\widowpenalty10000
+\displaywidowpenalty=10000
+
+\newtcolorbox{warningbox}{
+    breakable,enhanced,
+    boxrule=1pt,
+    colframe=black,
+    drop fuzzy shadow,
+    before=\vspace{1em},
+    after=\vspace{1em},
+}
+
+\author{emproof}
+\title{Guide for Developers \\ {\textnormal{\large Version 0.1}}}
+\date{\today}
+
+\usepackage{blindtext}
+
+\begin{document}
+
+\maketitle 
+
+\section{abc}
+\blindtext
+\blindtext
+\blindtext
+
+\begin{lstlisting}[
+	style=command_line,
+	caption={Git command to initialize submodules.},
+	label={listing:git_submodule_init}
+]
+$ git submodule init
+\end{lstlisting}
+
+
+\pagebreak
+
+\section{def}
+\blindtext
+
+\begin{warningbox}
+	{\Large \ding{43}}\noindent Attention
+\end{warningbox}
+\end{document}

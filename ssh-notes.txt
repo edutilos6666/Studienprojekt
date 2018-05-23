@@ -1,0 +1,15 @@
+Nijat.Aghayev@ruhr-uni-bochum.de
+
+
+ssh-keygen -t rsa -b 4096 -C "Nijat.Aghayev@ruhr-uni-bochum.de"
+
+
+file name: ~/Desktop/5semester/Studienprojekt/attempt1/my_rsa
+
+
+git clone --recursive "[gitlab@git.emproof.de:8922]:ai-project/shark.git"
+
+
+//location 
+~/.ssh folder 
+

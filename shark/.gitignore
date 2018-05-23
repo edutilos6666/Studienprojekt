@@ -1,0 +1,7 @@
+src/Backend/samples/
+src/Backend/Backend1*.cpp
+cmake-build-debug/
+
+build/
+.vscode
+.idea/
